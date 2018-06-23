@@ -17,9 +17,7 @@
   "preferGlobal": false,
   "main": "lib/index.js",
   "files": [
-    ".babelrc",
     "lib/",
-    "src/",
     "index.d.ts",
     "LICENSE",
     "README.md"
