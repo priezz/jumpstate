@@ -8,10 +8,17 @@ const guidv4 = () => {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
 }
 
-export default function (name, callback) {
+export default function (name, ...args) {
+  const isSandboxed = args.length > 1
+  let sandboxName = isSandboxed ? args[0] : undefined
+  const callback = isSandboxed ? args[1] : args[0]
+  
   // Make sure the action name is a valid string
   if (typeof name !== 'string') {
     throw new Error('Named effects require a valid string as the name eg. Effect("myAction", () => {...})')
+  }
+  if (sandboxName && typeof sandboxName !== 'string') {
+    throw new Error('Named effects require a valid string as the namespace eg. Effect("myAction", "myNamespace", () => {...})')
   }
 
   const callbackWrapper = (action) => {
@@ -50,7 +57,7 @@ export default function (name, callback) {
 
   eventDispatcher.actionCreator = actionCreator
 
-  addEffect(name, eventDispatcher, actionCreator)
+  addEffect(name, eventDispatcher, actionCreator, sandboxName)
 
   eventDispatcher.cancel = () => {
     delete EffectRegistry[name]
