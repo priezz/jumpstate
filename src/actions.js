@@ -1,6 +1,5 @@
 export const Actions = {}
 export const ActionCreators = {}
-let sandBoxNamespace
 
 export function addAction (actionName, action, actionCreator, sandboxName) {
   // Make sure the name is unique
@@ -17,8 +16,6 @@ export function addAction (actionName, action, actionCreator, sandboxName) {
     Actions[sandboxName][actionName] = payload => action(payload)
     ActionCreators[sandboxName][actionName] = actionCreator
 
-    // assign to namespace variable to allow addEffect() fn below to access this variable
-    sandBoxNamespace = sandboxName
     return
   }
 
@@ -33,22 +30,20 @@ export function addAction (actionName, action, actionCreator, sandboxName) {
   ActionCreators[actionName] = actionCreator
 }
 
-export function addEffect (effectName, action, actionCreator) {
+export function addEffect (effectName, action, actionCreator, sandboxName) {
   // Make sure the effect name is unique
   if (Actions[effectName]) {
     throw new Error(`An action called "${effectName}" already exists! Please pick another name for this effect!`)
   }
 
-  if (Actions[sandBoxNamespace] && Actions[sandBoxNamespace][effectName]) {
-    throw new Error(`An action called "${effectName}" in the ${sandBoxNamespace} sandbox already exists! Please pick another name for this effect!`)
+  if (sandboxName && Actions[sandboxName] && Actions[sandboxName][effectName]) {
+    throw new Error(`An action called "${effectName}" in the ${sandboxName} sandbox already exists! Please pick another name for this effect!`)
   }
 
   // if reducer is sandBoxed/namespaced, then namespace its respective effect also
-  if (sandBoxNamespace) {
-    Actions[sandBoxNamespace][effectName] = payload => action(payload)
-    ActionCreators[sandBoxNamespace][effectName] = actionCreator
-    // reset namespace variable
-    sandBoxNamespace = undefined
+  if (sandboxName) {
+    Actions[sandboxName][effectName] = payload => action(payload)
+    ActionCreators[sandboxName][effectName] = actionCreator
   } else {
     Actions[effectName] = payload => action(payload)
     ActionCreators[effectName] = actionCreator
