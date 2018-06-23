@@ -21,7 +21,6 @@
     "lib/",
     "src/",
     "index.d.ts",
-    "jumpstate.js",
     "LICENSE",
     "README.md"
   ],
@@ -52,7 +51,6 @@
     "parser": "babel-eslint",
     "ignore": [
       "lib",
-      "jumpstate.js",
       "examples"
     ]
   },
