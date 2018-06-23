@@ -15,7 +15,7 @@
     "react"
   ],
   "preferGlobal": false,
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "files": [
     ".babelrc",
     "lib/",
